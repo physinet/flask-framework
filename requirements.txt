@@ -1,3 +1,4 @@
 gunicorn
 requests==2.20.0
 regex==2020.7.14
+enum==0.4.7
