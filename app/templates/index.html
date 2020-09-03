@@ -13,9 +13,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   </head>
   <body>
-    <div class="data">
-      Test
-    </div>
+      <table>
+      {% for key, value in data.iteritems() %}
+         <tr>
+              <th> {{ key }} </th>
+              <td> {{ value }} </td>
+         </tr>
+      {% endfor %}
+      </table>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
