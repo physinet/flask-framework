@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import pandas as pd
+import datetime
 import requests
 
 from bokeh.embed import components
@@ -14,22 +15,35 @@ symbol='IBM'
 url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY\
 &outputsize=full&symbol={}&apikey={}'.format(symbol, API_KEY)
 
-r = requests.get(url)
-
-df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
-df = df.T # transpose so dates are in the rows
-
 @app.route('/')
 def index():
-  return render_template('index.html', data=df)
+
+    r = requests.get(url)
+
+    df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
+    df = df.T # transpose so dates are in the rows
+
+    return render_template('index.html', data=df)
 
 @app.route('/plot')
 def plot():
     '''
-    Following https://github.com/realpython/flask-bokeh-example
+    Display a Bokeh plot, following
+    https://github.com/realpython/flask-bokeh-example
     '''
+
+    r = requests.get(url)
+
+    df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
+    df = df.T  # transpose so data for each date are in the rows
+    df.index = pd.to_datetime(df.index)  # convert to datetime object
+
+    now = datetime.datetime.now()
+    one_month_ago = now - pd.DateOffset(months=1)
+    df_month = df[df.index > one_month_ago]
+
     fig = figure(plot_width=600, plot_height=600)
-    fig.line(x=[1,2,3], y=[4,5,6])
+    fig.line(x=df_month.index, y=df_month['4. close'])
 
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
