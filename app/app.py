@@ -57,7 +57,8 @@ def make_plot(symbol='IBM', msg=''):
                  tools=['ypan,ywheel_zoom,reset'], active_scroll='ywheel_zoom')
     fig.line(x=df_month.index, y=df_month['5. adjusted close'],
                 line_color='#000000', line_width=3)
-    fig.xaxis.formatter=DatetimeTickFormatter(days=['%b %d'])
+    fig.xaxis.formatter = DatetimeTickFormatter(days=['%b %d %Y'])
+    fig.xaxis.ticker = DatetimeTicker(desired_num_ticks=10)
 
     fig.yaxis.axis_label = "Stock Price (USD)"
 
