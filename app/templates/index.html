@@ -18,10 +18,11 @@
 
   </head>
   <body>
+    <p> Enter stock symbol below: </p>
     <form method="POST">
       <div class="form-inline">
         <div class="form-group">
-          <input type="text" class="line-input" name="symbol" placeholder="Stock symbol (e.g. AAPL)">
+          <input pattern="[a-zA-Z]+"  oninvalid="setCustomValidity('Please enter letters only.')"  style="text-transform: uppercase;" type="text" class="line-input" name="symbol" placeholder="AAPL">
         </div>
       </div>
 
@@ -29,9 +30,8 @@
         <button type="submit">Update plot</button>
       </div>
     </form>
-
+    <p>{{ msg }}</p>
     {{ plot_div|indent(4)|safe }}
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

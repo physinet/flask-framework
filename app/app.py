@@ -24,16 +24,23 @@ def update():
     return make_plot(symbol)
 
 
-def make_plot(symbol='IBM'):
+def make_plot(symbol='IBM', msg=''):
     '''
     Display a Bokeh plot showing last month's stocks for given symbol
     Following https://github.com/realpython/flask-bokeh-example
     '''
+    symbol=symbol.upper()
+
     url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&outputsize=full&symbol={}&apikey={}'.format(symbol, API_KEY)
 
     r = requests.get(url)
+    try:
+        data = r.json()['Time Series (Daily)']
+    except:
+        msg = '{} is not a valid stock symbol!'.format(symbol)
+        return make_plot('IBM', msg=msg)
 
-    df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
+    df = pd.DataFrame(data, dtype=float)
     df = df.T # transpose so dates are in the rows
     df.index = pd.to_datetime(df.index)  # convert to datetime object
 
@@ -41,7 +48,8 @@ def make_plot(symbol='IBM'):
     one_month_ago = now - pd.DateOffset(months=1)
     df_month = df[df.index > one_month_ago]
 
-    fig = figure(plot_width=600, plot_height=300,
+    fig = figure(title='Last month\'s stock prices for {}'.format(symbol),
+                 plot_width=600, plot_height=300,
                  x_range=(df_month.index.min(), df_month.index.max()),
                  tools=['ypan,ywheel_zoom,reset'], active_scroll='ywheel_zoom')
     fig.line(x=df_month.index, y=df_month['5. adjusted close'],
@@ -55,7 +63,7 @@ def make_plot(symbol='IBM'):
 
     script, div = components(fig)
     html = render_template('index.html', plot_script=script, plot_div=div,
-        js_resources=js_resources, css_resources=css_resources)
+        js_resources=js_resources, css_resources=css_resources, msg=msg)
     return encode_utf8(html)
 
 if __name__ == '__main__':
