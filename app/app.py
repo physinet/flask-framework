@@ -7,6 +7,7 @@ from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
+from bokeh.models import DatetimeTickFormatter
 
 app = Flask(__name__)
 
@@ -28,8 +29,7 @@ def make_plot(symbol='IBM'):
     Display a Bokeh plot showing last month's stocks for given symbol
     Following https://github.com/realpython/flask-bokeh-example
     '''
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY\
-&outputsize=full&symbol={}&apikey={}'.format(symbol, API_KEY)
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&outputsize=full&symbol={}&apikey={}'.format(symbol, API_KEY)
 
     r = requests.get(url)
 
@@ -42,7 +42,10 @@ def make_plot(symbol='IBM'):
     df_month = df[df.index > one_month_ago]
 
     fig = figure(plot_width=600, plot_height=600)
-    fig.line(x=df_month.index, y=df_month['4. close'])
+    fig.line(x=df_month.index, y=df_month['5. adjusted close'])
+    fig.xaxis.formatter=DatetimeTickFormatter(months = ['%B %Y'])
+
+    fig.yaxis.axis_label = "Stock Price (USD)"
 
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
