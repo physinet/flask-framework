@@ -41,9 +41,12 @@ def make_plot(symbol='IBM'):
     one_month_ago = now - pd.DateOffset(months=1)
     df_month = df[df.index > one_month_ago]
 
-    fig = figure(plot_width=600, plot_height=600)
-    fig.line(x=df_month.index, y=df_month['5. adjusted close'])
-    fig.xaxis.formatter=DatetimeTickFormatter(months = ['%B %Y'])
+    fig = figure(plot_width=600, plot_height=300,
+                 x_range=(df_month.index.min(), df_month.index.max()),
+                 tools=['ypan,ywheel_zoom,reset'], active_scroll='ywheel_zoom')
+    fig.line(x=df_month.index, y=df_month['5. adjusted close'],
+                line_color='#000000', line_width=3)
+    fig.xaxis.formatter=DatetimeTickFormatter(days=['%b %d'])
 
     fig.yaxis.axis_label = "Stock Price (USD)"
 
