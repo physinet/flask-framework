@@ -7,7 +7,7 @@ from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
-from bokeh.models import DatetimeTickFormatter
+from bokeh.models import DatetimeTickFormatter, DatetimeTicker
 
 app = Flask(__name__)
 
@@ -52,7 +52,7 @@ def make_plot(symbol='IBM', msg=''):
     df_month = df[df.index > last_month]
 
     fig = figure(title='Stock prices for {} (last month of available adjusted close data)'.format(symbol),
-                 plot_width=600, plot_height=300,
+                 plot_width=1000, plot_height=300,
                  x_range=(df_month.index.min(), df_month.index.max()),
                  tools=['ypan,ywheel_zoom,reset'], active_scroll='ywheel_zoom')
     fig.line(x=df_month.index, y=df_month['5. adjusted close'],
