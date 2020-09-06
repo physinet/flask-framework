@@ -47,11 +47,11 @@ def make_plot(symbol='IBM', msg=''):
     df = df.T # transpose so dates are in the rows
     df.index = pd.to_datetime(df.index)  # convert to datetime object
 
-    now = datetime.datetime.now()
-    one_month_ago = now - pd.DateOffset(months=1)
-    df_month = df[df.index > one_month_ago]
+    last = df.index.max()
+    last_month = last - pd.DateOffset(months=1)
+    df_month = df[df.index > last_month]
 
-    fig = figure(title='Last month\'s stock prices for {}'.format(symbol),
+    fig = figure(title='Stock prices for {} (last month of available adjusted close data)'.format(symbol),
                  plot_width=600, plot_height=300,
                  x_range=(df_month.index.min(), df_month.index.max()),
                  tools=['ypan,ywheel_zoom,reset'], active_scroll='ywheel_zoom')
