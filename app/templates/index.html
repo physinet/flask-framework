@@ -11,16 +11,15 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    {{ js_resources|indent(4)|safe }}
+    {{ css_resources|indent(4)|safe }}
+    {{ plot_script|indent(4)|safe }}
+
   </head>
   <body>
-      <table>
-      {% for key, value in data.items() %}
-         <tr>
-              <th> {{ key }} </th>
-              <td> {{ value }} </td>
-         </tr>
-      {% endfor %}
-      </table>
+    {{ plot_div|indent(4)|safe }}
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

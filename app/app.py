@@ -17,25 +17,14 @@ url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY\
 
 @app.route('/')
 def index():
-
+    '''
+    Display a Bokeh plot with a defuault ticker
+    Following https://github.com/realpython/flask-bokeh-example
+    '''
     r = requests.get(url)
 
     df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
     df = df.T # transpose so dates are in the rows
-
-    return render_template('index.html', data=df)
-
-@app.route('/plot')
-def plot():
-    '''
-    Display a Bokeh plot, following
-    https://github.com/realpython/flask-bokeh-example
-    '''
-
-    r = requests.get(url)
-
-    df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
-    df = df.T  # transpose so data for each date are in the rows
     df.index = pd.to_datetime(df.index)  # convert to datetime object
 
     now = datetime.datetime.now()
@@ -49,10 +38,9 @@ def plot():
     css_resources = INLINE.render_css()
 
     script, div = components(fig)
-    html = render_template('plot.html', plot_script=script, plot_div=div,
+    html = render_template('index.html', plot_script=script, plot_div=div,
         js_resources=js_resources, css_resources=css_resources)
     return encode_utf8(html)
-
 
 if __name__ == '__main__':
   app.run(port=33507)
