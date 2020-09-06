@@ -18,6 +18,18 @@
 
   </head>
   <body>
+    <form method="POST">
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="text" class="line-input" name="symbol" placeholder="Stock symbol (e.g. AAPL)">
+        </div>
+      </div>
+
+      <div class=" form-group">
+        <button type="submit" class="btn btn-light text-primary btn-block" style="margin : 20px 20px -10px 0px">Update plot</button>
+      </div>
+    </form>
+
     {{ plot_div|indent(4)|safe }}
 
     <!-- Bootstrap core JavaScript

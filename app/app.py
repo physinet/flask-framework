@@ -11,16 +11,26 @@ from bokeh.util.string import encode_utf8
 app = Flask(__name__)
 
 API_KEY = 'JZ83OOJHHC5428Z3'
-symbol='IBM'
-url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY\
-&outputsize=full&symbol={}&apikey={}'.format(symbol, API_KEY)
 
 @app.route('/')
 def index():
+    return make_plot('IBM')
+
+
+@app.route('/', methods=['POST'])
+def update():
+    symbol = request.form['symbol']
+    return make_plot(symbol)
+
+
+def make_plot(symbol='IBM'):
     '''
-    Display a Bokeh plot with a defuault ticker
+    Display a Bokeh plot showing last month's stocks for given symbol
     Following https://github.com/realpython/flask-bokeh-example
     '''
+    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY\
+&outputsize=full&symbol={}&apikey={}'.format(symbol, API_KEY)
+
     r = requests.get(url)
 
     df = pd.DataFrame(r.json()['Time Series (Daily)'], dtype=float)
