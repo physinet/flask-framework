@@ -37,7 +37,10 @@ def make_plot(symbol='IBM', msg=''):
     try:
         data = r.json()['Time Series (Daily)']
     except:
-        msg = '{} is not a valid stock symbol!'.format(symbol)
+        if symbol == '':
+            msg = 'Please enter a stock symbol'
+        else:
+            msg = '{} is not a valid stock symbol!'.format(symbol)
         return make_plot('IBM', msg=msg)
 
     df = pd.DataFrame(data, dtype=float)
